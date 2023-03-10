@@ -8,7 +8,39 @@
   </head>
   <body>
     <h1>Hello!</h1>
-    <div id="tarefas-div"></div>
+    <div>
+      <h1>Criar Nova Tarefa</h1>
+      <form id="create-task-form">
+        <label for="task-responsavel">Responsável:</label>
+        <input type="text" id="task-responsavel" name="task-responsavel">
+        <br>
+        <label for="task-description">Descrição da Tarefa:</label>
+        <textarea id="task-description" name="task-description"></textarea>
+        <br>
+        <label for="task-nivel">Nível:</label>
+        <select id="task-nivel" name="task-nivel">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+        <label for="task-situacao">Situação:</label>
+        <select id="task-situacao" name="task-situacao">
+          <option value="1">Andamento</option>
+          <option value="2">Pendente</option>
+          <option value="3">Concluída</option>
+        </select>
+        <label for="task-priority">Primoridade:</label>
+        <select id="task-priority" name="task-priority">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <input type="submit" value="Criar Tarefa">
+      </form>
+      <ul id="task-list"></ul>
+    </div>
     <script type="module" src="./src/main.ts"></script>
   </body>
 </html>
