@@ -43,6 +43,7 @@ form.addEventListener('submit', (event) => {
     .then((response) => {
       console.log('Tarefa criada com sucesso:', response.data);
       // Aqui você pode redirecionar para a página de lista de tarefas ou atualizar a lista na mesma página
+      location.reload();
     })
     .catch((error) => {
       console.error('Erro ao criar tarefa:', error);
