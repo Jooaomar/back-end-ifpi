@@ -1,12 +1,41 @@
-from functools import reduce
 from fastapi import FastAPI, HTTPException, Response, status
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+from typing import Union
+import pymongo
+from fastapi.responses import JSONResponse
+from bson import json_util
+
+
+
 
 app = FastAPI()
 
+origins = [
+    "http://localhost.tiangolo.com",
+    "http://0.0.0.0:3000/",
+    "http://localhost:3000/",
+    "http://localhost:3000"
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+client = pymongo.MongoClient("mongodb+srv://<use>:<senha>@cluster0.ms2ogne.mongodb.net/?retryWrites=true&w=majority")
+db = client["listaFilmes"]
+collection = db["filme"]
+
 
 class Tarefas(BaseModel):
-    id: int | None
+    id: Union[int, None]
     responsavel: str
     descricao: str
     nivel: int          # 1,2,3,4,5
@@ -20,8 +49,10 @@ tarefas: list[Tarefas] = []
 @app.post('/adicionar/')
 def adicionar(item: Tarefas):
     item.id = len(tarefas) + 100
-    tarefas.append(item)
-    return tarefas
+    # tarefas.append(item)
+    col = dict(item)
+    collection.insert_one(col)
+    return item
 
 
 @app.delete('/deletar/{tarefa_id}')
@@ -34,9 +65,12 @@ def remover(tarefa_id: int):
         i += 1
 
 
-@app.get('/tarefas')
+@app.get('/filmes')
 def listar():
-    return tarefas
+    filmes = []
+    for filme in collection.find():
+        filmes.append(json_util.dumps(filme))
+    return filmes
 
 
 @app.get('/tarefas/')
@@ -90,3 +124,6 @@ def situacao(tarefa_id: int, mudanca: str):
         if task.id == tarefa_id:
             task.situacao = mudanca
             return task
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8080)
