@@ -6,8 +6,13 @@ from typing import Union
 import pymongo
 from fastapi.responses import JSONResponse
 from bson import json_util
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
+user = os.getenv('USER')
+password = os.getenv('PASSWORD')
 
 
 app = FastAPI()
@@ -29,7 +34,7 @@ app.add_middleware(
 )
 
 
-client = pymongo.MongoClient("mongodb+srv://<use>:<senha>@cluster0.ms2ogne.mongodb.net/?retryWrites=true&w=majority")
+client = pymongo.MongoClient(f"mongodb+srv://{user}:{password}@cluster0.ms2ogne.mongodb.net/?retryWrites=true&w=majority")
 db = client["listaFilmes"]
 collection = db["filme"]
 
